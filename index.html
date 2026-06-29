@@ -943,6 +943,49 @@
       .hero h1 { font-size: 1.7rem; }
     }
 
+    .rate-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Custom payment mode highlight */
+    .custom-pmt-result {
+      background: linear-gradient(135deg, rgba(0,212,184,0.1), rgba(0,212,184,0.04));
+      border: 1px solid rgba(0,212,184,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .custom-pmt-result .cpr-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .custom-pmt-result .cpr-label {
+      font-size: 0.75rem;
+      color: var(--slate);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .custom-pmt-result .cpr-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--teal);
+      font-weight: 500;
+    }
+
+    .custom-pmt-result .cpr-warn {
+      font-size: 0.72rem;
+      color: var(--red);
+      margin-top: 2px;
+    }
+
     /* === PRINT === */
     @media print {
       body { background: white; color: black; }
@@ -1024,12 +1067,20 @@
                 <span class="tooltip-text">APR — Annual Percentage Rate</span>
               </span>
             </label>
-            <span class="slider-value" id="rateDisplay">6.50%</span>
+            <div class="rate-input-wrap">
+              <input type="number" id="rateTyped" value="6.50" min="0.01" max="50" step="0.01"
+                style="width:78px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--teal);font-family:'DM Mono',monospace;font-size:0.9rem;font-weight:500;padding:4px 22px 4px 8px;outline:none;text-align:right;transition:border-color 0.2s;"
+                oninput="syncRateFromInput(this.value)"
+                onfocus="this.style.borderColor='var(--border-focus)'"
+                onblur="this.style.borderColor='var(--border)'"
+              />
+              <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--slate);pointer-events:none;">%</span>
+            </div>
           </div>
-          <input type="range" id="interestRate" min="0.1" max="30" step="0.05" value="6.5" oninput="document.getElementById('rateDisplay').textContent=parseFloat(this.value).toFixed(2)+'%'" />
+          <input type="range" id="interestRate" min="0.01" max="50" step="0.01" value="6.5" oninput="syncRateFromSlider(this.value)" />
           <div style="display:flex;justify-content:space-between;margin-top:2px;">
-            <span style="font-size:0.68rem;color:var(--slate-dim)">0.1%</span>
-            <span style="font-size:0.68rem;color:var(--slate-dim)">30%</span>
+            <span style="font-size:0.68rem;color:var(--slate-dim)">0.01%</span>
+            <span style="font-size:0.68rem;color:var(--slate-dim)">50%</span>
           </div>
         </div>
 
@@ -1075,6 +1126,46 @@
               onmouseout="this.style.borderColor='var(--border)'"
             />
           </div>
+        </div>
+
+        <div class="section-divider">
+          <span>Custom Payment</span>
+        </div>
+
+        <!-- Custom Payment Toggle -->
+        <div class="toggle-field">
+          <span class="toggle-label">
+            <span class="tooltip-wrap">
+              Set My Own Payment Amount
+              <span class="tooltip-icon">?</span>
+              <span class="tooltip-text">Enter what you can afford — we'll tell you exactly when you'll be debt-free</span>
+            </span>
+          </span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="customPmtToggle" onchange="toggleCustomPmt()" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div id="customPmtFields" style="display:none;flex-direction:column;gap:14px;">
+          <div class="field">
+            <label>
+              <span class="tooltip-wrap">
+                My Payment Amount
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">What you plan to pay per period (must exceed minimum interest)</span>
+              </span>
+            </label>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="customPmtAmount" value="" min="1" step="10"
+                placeholder="e.g. 250" oninput="previewCustomPayoff()" />
+            </div>
+          </div>
+          <div id="customPmtPreview" style="display:none;"></div>
+          <p style="font-size:0.72rem;color:var(--slate-dim);line-height:1.5;">
+            ℹ️ Uses the payment frequency selected above. For weekly payments, payoff is shown in <strong style="color:var(--teal)">weeks and months</strong>.
+          </p>
         </div>
 
         <div class="section-divider">
@@ -1196,6 +1287,23 @@ let amortChart = null;
 let balanceChart = null;
 
 // ============================================================
+// RATE SYNC — slider ↔ typed input
+// ============================================================
+function syncRateFromSlider(val) {
+  const v = parseFloat(val);
+  document.getElementById('rateTyped').value = v.toFixed(2);
+  previewCustomPayoff();
+}
+
+function syncRateFromInput(val) {
+  let v = parseFloat(val);
+  if (isNaN(v)) return;
+  v = Math.min(50, Math.max(0.01, v));
+  document.getElementById('interestRate').value = v;
+  previewCustomPayoff();
+}
+
+// ============================================================
 // TOGGLE FUNCTIONS
 // ============================================================
 function toggleExtra() {
@@ -1205,10 +1313,80 @@ function toggleExtra() {
   checkExtraType();
 }
 
+function toggleCustomPmt() {
+  const on = document.getElementById('customPmtToggle').checked;
+  document.getElementById('customPmtFields').style.display = on ? 'flex' : 'none';
+  if (on) previewCustomPayoff();
+}
+
 function checkExtraType() {
   const type = document.getElementById('extraType')?.value;
   const oneoff = document.getElementById('oneoffDateField');
   if (oneoff) oneoff.style.display = type === 'oneoff' ? 'block' : 'none';
+}
+
+// ============================================================
+// CUSTOM PAYMENT PREVIEW (live feedback in panel)
+// ============================================================
+function previewCustomPayoff() {
+  if (!document.getElementById('customPmtToggle').checked) return;
+
+  const P = parseFloat(document.getElementById('loanAmount').value);
+  const annualRate = parseFloat(document.getElementById('rateTyped').value);
+  const freqKey = document.getElementById('frequency').value;
+  const customAmt = parseFloat(document.getElementById('customPmtAmount').value);
+  const preview = document.getElementById('customPmtPreview');
+
+  if (!P || !annualRate || !customAmt || customAmt <= 0) {
+    preview.style.display = 'none';
+    return;
+  }
+
+  const freqPerYear = FREQ[freqKey].perYear;
+  const r = annualRate / 100 / freqPerYear;
+  const minInterest = P * r;
+
+  preview.style.display = 'block';
+
+  if (customAmt <= minInterest + 0.01) {
+    preview.innerHTML = `<div class="custom-pmt-result">
+      <div class="cpr-warn">⚠️ Payment too low — you must pay more than ${fmt(minInterest, 2)} to cover interest. The loan will never be paid off.</div>
+    </div>`;
+    return;
+  }
+
+  // Simulate payoff
+  let balance = P;
+  let periods = 0;
+  let totalInt = 0;
+  const maxPeriods = freqPerYear * 100;
+  while (balance > 0.005 && periods < maxPeriods) {
+    const intCharge = balance * r;
+    const principal = Math.min(customAmt - intCharge, balance);
+    totalInt += intCharge;
+    balance -= principal;
+    periods++;
+  }
+
+  const totalWeeks = freqKey === 'weekly' ? periods : Math.round(periods / freqPerYear * 52);
+  const totalMonthsCalc = Math.round(periods / freqPerYear * 12);
+  const yrs = Math.floor(totalMonthsCalc / 12);
+  const mos = totalMonthsCalc % 12;
+  const timeStr = [yrs > 0 ? `${yrs} yr${yrs>1?'s':''}` : '', mos > 0 ? `${mos} mo${mos>1?'s':''}` : ''].filter(Boolean).join(', ') || '< 1 month';
+
+  const freqLabel = FREQ[freqKey].label;
+  const weeksLine = freqKey === 'weekly'
+    ? `<div class="cpr-row"><span class="cpr-label">Total Weeks</span><span class="cpr-value">${fmtNum(periods)} weeks</span></div>`
+    : freqKey === 'biweekly'
+    ? `<div class="cpr-row"><span class="cpr-label">Total Bi-Weekly Pmts</span><span class="cpr-value">${fmtNum(periods)} payments (~${fmtNum(totalWeeks)} wks)</span></div>`
+    : `<div class="cpr-row"><span class="cpr-label">Total Payments</span><span class="cpr-value">${fmtNum(periods)} ${freqLabel}s</span></div>`;
+
+  preview.innerHTML = `<div class="custom-pmt-result">
+    ${weeksLine}
+    <div class="cpr-row"><span class="cpr-label">Payoff Duration</span><span class="cpr-value">${timeStr}</span></div>
+    <div class="cpr-row"><span class="cpr-label">Total Interest</span><span class="cpr-value" style="color:var(--amber)">${fmt(totalInt)}</span></div>
+    <div class="cpr-row"><span class="cpr-label">Total Cost</span><span class="cpr-value" style="color:var(--red)">${fmt(P + totalInt)}</span></div>
+  </div>`;
 }
 
 document.getElementById('extraType').addEventListener('change', checkExtraType);
@@ -1232,11 +1410,13 @@ const FREQ = {
 // ============================================================
 // AMORTIZATION ENGINE
 // ============================================================
-function buildSchedule(P, annualRate, totalPeriods, freqPerYear, extraCfg, loanType, ioperiods, balloonAt) {
+function buildSchedule(P, annualRate, totalPeriods, freqPerYear, extraCfg, loanType, ioperiods, balloonAt, customPmt = null) {
   const r = annualRate / 100 / freqPerYear;
   let pmt;
 
-  if (loanType === 'interestonly') {
+  if (customPmt !== null) {
+    pmt = customPmt; // user-defined fixed payment
+  } else if (loanType === 'interestonly') {
     pmt = P * r; // interest-only payment (will switch after ioperiods)
   } else if (loanType === 'balloon') {
     // Standard amortization payment up until balloon
@@ -1306,19 +1486,34 @@ function buildSchedule(P, annualRate, totalPeriods, freqPerYear, extraCfg, loanT
 // ============================================================
 function calculate() {
   const P = parseFloat(document.getElementById('loanAmount').value);
-  const annualRate = parseFloat(document.getElementById('interestRate').value);
+  const annualRate = parseFloat(document.getElementById('rateTyped').value);
   const termVal = parseInt(document.getElementById('loanTerm').value);
   const termUnit = document.getElementById('termUnit').value;
   const freqKey = document.getElementById('frequency').value;
   const loanType = document.getElementById('loanType').value;
   const ioperiods = parseInt(document.getElementById('interestOnlyPeriods').value) || 12;
   const balloonAt = parseInt(document.getElementById('balloonPeriods').value) || 60;
+  const customPmtOn = document.getElementById('customPmtToggle').checked;
+  const customAmt = customPmtOn ? parseFloat(document.getElementById('customPmtAmount').value) : null;
 
-  if (!P || P <= 0 || !termVal) return;
+  if (!P || P <= 0 || !annualRate) return;
 
   const freqPerYear = FREQ[freqKey].perYear;
+  const r = annualRate / 100 / freqPerYear;
+
+  // Validate custom payment
+  if (customPmtOn) {
+    if (!customAmt || customAmt <= 0) return;
+    const minInterest = P * r;
+    if (customAmt <= minInterest + 0.01) return; // preview already shows error
+  }
+
+  if (!customPmtOn && !termVal) return;
+
   const totalMonths = termUnit === 'years' ? termVal * 12 : termVal;
-  const totalPeriods = Math.round((totalMonths / 12) * freqPerYear);
+  const totalPeriods = customPmtOn
+    ? freqPerYear * 100  // large cap; schedule stops when balance = 0
+    : Math.round((totalMonths / 12) * freqPerYear);
 
   const extraEnabled = document.getElementById('extraToggle').checked;
   const extraCfg = {
@@ -1329,31 +1524,39 @@ function calculate() {
   };
 
   // Standard schedule (no extra)
-  const schedBase = buildSchedule(P, annualRate, totalPeriods, freqPerYear, { enabled: false }, loanType, ioperiods, balloonAt);
+  const schedBase = buildSchedule(P, annualRate, totalPeriods, freqPerYear, { enabled: false }, loanType, ioperiods, balloonAt, customPmtOn ? customAmt : null);
   // Accelerated schedule (with extra)
   const schedAccel = extraEnabled
-    ? buildSchedule(P, annualRate, totalPeriods, freqPerYear, extraCfg, loanType, ioperiods, balloonAt)
+    ? buildSchedule(P, annualRate, totalPeriods, freqPerYear, extraCfg, loanType, ioperiods, balloonAt, customPmtOn ? customAmt : null)
     : null;
 
-  renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, schedBase, schedAccel, extraEnabled, totalMonths);
+  _lastSched = schedBase;
+  renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, schedBase, schedAccel, extraEnabled, totalMonths, customPmtOn, customAmt);
 }
 
 // ============================================================
 // RENDER
 // ============================================================
-function renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, sched, schedAccel, extraEnabled, totalMonths) {
+function renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, sched, schedAccel, extraEnabled, totalMonths, customPmtOn = false, customAmt = null) {
   const panel = document.getElementById('resultsPanel');
   document.getElementById('emptyState')?.remove();
 
   const totalInterest = sched[sched.length - 1].totalInterest;
   const totalCost = P + totalInterest;
-  const pmt = sched[0].payment - sched[0].extra;
+  const pmt = customAmt !== null ? customAmt : (sched[0].payment - sched[0].extra);
   const actualPeriods = sched.length;
-  const periodsPerYear = freqPerYear;
-  const years = actualPeriods / periodsPerYear;
+  const years = actualPeriods / freqPerYear;
   const yrs = Math.floor(years);
   const mos = Math.round((years - yrs) * 12);
   const termLabel = [yrs > 0 ? `${yrs}y` : '', mos > 0 ? `${mos}m` : ''].filter(Boolean).join(' ') || '< 1m';
+
+  // Weekly/biweekly get an extra "X weeks" line
+  const totalWeeks = Math.round(actualPeriods / freqPerYear * 52);
+  const weeksSubLabel = freqKey === 'weekly'
+    ? `${fmtNum(actualPeriods)} weeks · ${termLabel}`
+    : freqKey === 'biweekly'
+    ? `${fmtNum(actualPeriods)} payments (~${fmtNum(totalWeeks)} wks) · ${termLabel}`
+    : `${fmtNum(actualPeriods)} ${freqKey} payments`;
 
   const fLabel = FREQ[freqKey].label;
 
@@ -1378,7 +1581,7 @@ function renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, sched,
     <div class="kpi-card green">
       <div class="kpi-label">Payoff Timeline</div>
       <div class="kpi-value green">${termLabel}</div>
-      <div class="kpi-sub">${fmtNum(actualPeriods)} ${freqKey} payments</div>
+      <div class="kpi-sub">${weeksSubLabel}</div>
     </div>
   </div>`;
 
@@ -1710,40 +1913,6 @@ function buildTable(sched, freqKey) {
 // EXPORT CSV
 // ============================================================
 let _lastSched = null;
-const _origBuild = buildSchedule;
-
-function calculate() {
-  const P = parseFloat(document.getElementById('loanAmount').value);
-  const annualRate = parseFloat(document.getElementById('interestRate').value);
-  const termVal = parseInt(document.getElementById('loanTerm').value);
-  const termUnit = document.getElementById('termUnit').value;
-  const freqKey = document.getElementById('frequency').value;
-  const loanType = document.getElementById('loanType').value;
-  const ioperiods = parseInt(document.getElementById('interestOnlyPeriods').value) || 12;
-  const balloonAt = parseInt(document.getElementById('balloonPeriods').value) || 60;
-
-  if (!P || P <= 0 || !termVal) return;
-
-  const freqPerYear = FREQ[freqKey].perYear;
-  const totalMonths = termUnit === 'years' ? termVal * 12 : termVal;
-  const totalPeriods = Math.round((totalMonths / 12) * freqPerYear);
-
-  const extraEnabled = document.getElementById('extraToggle').checked;
-  const extraCfg = {
-    enabled: extraEnabled,
-    amount: extraEnabled ? parseFloat(document.getElementById('extraAmount').value) || 0 : 0,
-    type: document.getElementById('extraType').value,
-    oneoffAt: parseInt(document.getElementById('oneoffPeriod').value) || 6,
-  };
-
-  const schedBase = buildSchedule(P, annualRate, totalPeriods, freqPerYear, { enabled: false }, loanType, ioperiods, balloonAt);
-  const schedAccel = extraEnabled
-    ? buildSchedule(P, annualRate, totalPeriods, freqPerYear, extraCfg, loanType, ioperiods, balloonAt)
-    : null;
-
-  _lastSched = schedBase;
-  renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, schedBase, schedAccel, extraEnabled, totalMonths);
-}
 
 function exportCSV() {
   if (!_lastSched) return;
@@ -1764,12 +1933,15 @@ function exportCSV() {
 function resetForm() {
   document.getElementById('loanAmount').value = 25000;
   document.getElementById('interestRate').value = 6.5;
-  document.getElementById('rateDisplay').textContent = '6.50%';
+  document.getElementById('rateTyped').value = '6.50';
   document.getElementById('loanTerm').value = 5;
   document.getElementById('termUnit').value = 'years';
   document.getElementById('frequency').value = 'monthly';
   document.getElementById('extraToggle').checked = false;
   document.getElementById('extraFields').style.display = 'none';
+  document.getElementById('customPmtToggle').checked = false;
+  document.getElementById('customPmtFields').style.display = 'none';
+  document.getElementById('customPmtPreview').style.display = 'none';
   document.getElementById('loanType').value = 'standard';
   document.getElementById('interestOnlyField').style.display = 'none';
   document.getElementById('balloonField').style.display = 'none';
