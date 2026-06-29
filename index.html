@@ -986,6 +986,234 @@
       margin-top: 2px;
     }
 
+    /* === PDF / EMAIL MODAL === */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 12, 28, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--navy-2);
+      border: 1px solid rgba(0,212,184,0.2);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 32px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--slate);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .modal-close:hover { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.3); }
+
+    .modal-tabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .modal-tab {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--slate);
+      transition: all 0.2s;
+    }
+
+    .modal-tab.active {
+      background: rgba(0,212,184,0.15);
+      color: var(--teal);
+    }
+
+    .modal-pane { display: none; flex-direction: column; gap: 16px; }
+    .modal-pane.active { display: flex; }
+
+    .modal-field { display: flex; flex-direction: column; gap: 7px; }
+
+    .modal-field label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--slate);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .modal-field input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .modal-field input:focus {
+      border-color: var(--border-focus);
+      background: rgba(0,212,184,0.04);
+    }
+
+    .modal-field input::placeholder { color: var(--slate-dim); }
+
+    .modal-note {
+      font-size: 0.75rem;
+      color: var(--slate-dim);
+      line-height: 1.5;
+      padding: 10px 12px;
+      background: rgba(148,163,184,0.06);
+      border-radius: 6px;
+      border-left: 2px solid var(--border);
+    }
+
+    .modal-note.warn { border-left-color: var(--amber); color: rgba(245,158,11,0.8); }
+    .modal-note.success { border-left-color: var(--green); color: rgba(52,211,153,0.9); }
+    .modal-note.error { border-left-color: var(--red); color: rgba(248,113,113,0.9); }
+
+    .btn-modal-action {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-modal-action.teal {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dim));
+      color: var(--navy);
+    }
+
+    .btn-modal-action.amber {
+      background: linear-gradient(135deg, var(--amber), var(--amber-dim));
+      color: var(--navy);
+    }
+
+    .btn-modal-action:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+    .btn-modal-action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Export button in results */
+    .export-bar {
+      background: var(--card);
+      border: 1px solid rgba(0,212,184,0.15);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      gap: 16px;
+    }
+
+    .export-bar-text h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 3px; }
+    .export-bar-text p { font-size: 0.78rem; color: var(--slate); }
+
+    .export-bar-btns { display: flex; gap: 10px; flex-shrink: 0; }
+
+    .btn-export {
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-export.pdf {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dim));
+      color: var(--navy);
+    }
+
+    .btn-export.email {
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--amber);
+    }
+
+    .btn-export:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: inline-block;
+    }
+
     /* === PRINT === */
     @media print {
       body { background: white; color: black; }
@@ -1268,6 +1496,61 @@
   </footer>
 </div>
 
+<!-- PDF / EMAIL MODAL -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📄 Export Your Report</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- Shared name field -->
+    <div class="modal-field" style="margin-bottom:20px;">
+      <label>Your Full Name <span style="color:var(--red)">*</span></label>
+      <input type="text" id="exportName" placeholder="e.g. Adam Akka" autocomplete="name"
+        oninput="onNameInput()" />
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('pdf')">📥 Download PDF</button>
+      <button class="modal-tab" onclick="switchTab('email')">✉️ Email Report</button>
+    </div>
+
+    <!-- PDF PANE -->
+    <div class="modal-pane active" id="pane-pdf">
+      <div class="modal-note">
+        A professionally formatted PDF will be generated in your browser and downloaded instantly — no data leaves your device.
+      </div>
+      <button class="btn-modal-action teal" id="btnDownloadPdf" onclick="generateAndDownloadPDF()" disabled>
+        📥 Generate &amp; Download PDF
+      </button>
+      <div id="pdfStatus"></div>
+    </div>
+
+    <!-- EMAIL PANE -->
+    <div class="modal-pane" id="pane-email">
+      <div class="modal-field">
+        <label>Your Email Address <span style="color:var(--red)">*</span></label>
+        <input type="email" id="exportEmail" placeholder="you@example.com" autocomplete="email"
+          oninput="onEmailInput()" />
+      </div>
+      <div class="modal-note warn">
+        ⚠️ Email delivery uses <strong>EmailJS</strong>. To activate, add your EmailJS Service ID, Template ID, and Public Key in the script at the bottom of this page. Until configured, use <strong>Download PDF</strong> instead.
+      </div>
+      <button class="btn-modal-action amber" id="btnSendEmail" onclick="sendReportEmail()" disabled>
+        ✉️ Send Report to My Email
+      </button>
+      <div id="emailStatus"></div>
+    </div>
+  </div>
+</div>
+
+<!-- jsPDF + autotable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<!-- EmailJS (optional — only needed for email feature) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <!-- Chart.js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
@@ -1531,8 +1814,18 @@ function calculate() {
     : null;
 
   _lastSched = schedBase;
+  window._lastSchedAccel = schedAccel;
   renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, schedBase, schedAccel, extraEnabled, totalMonths, customPmtOn, customAmt);
 }
+
+// Set default date to today
+document.getElementById('startDate').valueAsDate = new Date();
+
+// Auto-calculate on load with defaults
+calculate();
+
+// ============================================================
+// MODAL / PDF / EMAIL JS below ↓
 
 // ============================================================
 // RENDER
@@ -1684,8 +1977,21 @@ function renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, sched,
   // ---- AMORTIZATION TABLE ----
   let tableHTML = buildTable(sched, freqKey);
 
+  // ---- EXPORT BAR ----
+  const exportBarHTML = `
+  <div class="export-bar fade-in visible">
+    <div class="export-bar-text">
+      <h4>📄 Save Your Results</h4>
+      <p>Download a formatted PDF report or send it straight to your inbox</p>
+    </div>
+    <div class="export-bar-btns">
+      <button class="btn-export pdf" onclick="openModal('pdf')">📥 PDF</button>
+      <button class="btn-export email" onclick="openModal('email')">✉️ Email</button>
+    </div>
+  </div>`;
+
   // Assemble
-  panel.innerHTML = kpiHTML + timelineHTML + chartHTML + paymentChartHTML + compHTML + tableHTML;
+  panel.innerHTML = kpiHTML + exportBarHTML + timelineHTML + chartHTML + paymentChartHTML + compHTML + tableHTML;
 
   // Draw charts
   setTimeout(() => {
@@ -1953,11 +2259,459 @@ function resetForm() {
     </div>`;
 }
 
-// Set default date to today
-document.getElementById('startDate').valueAsDate = new Date();
+// ============================================================
+// MODAL CONTROLS
+// ============================================================
+function openModal(tab) {
+  document.getElementById('exportModal').classList.add('open');
+  switchTab(tab || 'pdf');
+}
 
-// Auto-calculate on load with defaults
-calculate();
+function closeModal() {
+  document.getElementById('exportModal').classList.remove('open');
+}
+
+document.getElementById('exportModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function switchTab(tab) {
+  document.querySelectorAll('.modal-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'pdf') || (i === 1 && tab === 'email'));
+  });
+  document.getElementById('pane-pdf').classList.toggle('active', tab === 'pdf');
+  document.getElementById('pane-email').classList.toggle('active', tab === 'email');
+}
+
+function onNameInput() {
+  const hasName = document.getElementById('exportName').value.trim().length > 1;
+  document.getElementById('btnDownloadPdf').disabled = !hasName;
+  onEmailInput();
+}
+
+function onEmailInput() {
+  const hasName = document.getElementById('exportName').value.trim().length > 1;
+  const emailVal = document.getElementById('exportEmail').value.trim();
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+  document.getElementById('btnSendEmail').disabled = !(hasName && validEmail);
+}
+
+// ============================================================
+// PDF GENERATION  (jsPDF + autoTable — pure browser, no server)
+// ============================================================
+function generateAndDownloadPDF() {
+  if (!_lastSched) return;
+  const name = document.getElementById('exportName').value.trim();
+  const btn = document.getElementById('btnDownloadPdf');
+  const status = document.getElementById('pdfStatus');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Building PDF…';
+  status.innerHTML = '';
+
+  setTimeout(() => {
+    try {
+      const pdf = buildPDF(name);
+      const filename = `ClearDebt_Report_${name.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`;
+      pdf.save(filename);
+      btn.innerHTML = '✅ Downloaded!';
+      status.innerHTML = `<div class="modal-note success">Your report "<strong>${filename}</strong>" was saved to your Downloads folder.</div>`;
+      setTimeout(() => { btn.innerHTML = '📥 Generate &amp; Download PDF'; btn.disabled = false; }, 3000);
+    } catch(err) {
+      btn.innerHTML = '📥 Generate &amp; Download PDF';
+      btn.disabled = false;
+      status.innerHTML = `<div class="modal-note error">Error: ${err.message}</div>`;
+    }
+  }, 50);
+}
+
+function buildPDF(name) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const W = 210, H = 297;
+  const margin = 18;
+  const col = W - margin * 2;
+
+  // ── colour palette ──
+  const NAVY   = [10, 22, 40];
+  const TEAL   = [0, 212, 184];
+  const AMBER  = [245, 158, 11];
+  const WHITE  = [248, 250, 252];
+  const SLATE  = [100, 116, 139];
+  const GREEN  = [52, 211, 153];
+  const RED    = [248, 113, 113];
+  const LIGHT  = [241, 245, 249];
+
+  // ── helpers ──
+  const rgb = (r,g,b) => { doc.setDrawColor(r,g,b); doc.setFillColor(r,g,b); };
+  const pen = (r,g,b) => doc.setDrawColor(r,g,b);
+  const fill = (r,g,b) => doc.setFillColor(r,g,b);
+  const ink = (r,g,b) => doc.setTextColor(r,g,b);
+  const bold = (s) => doc.setFont('helvetica','bold').setFontSize(s);
+  const regular = (s) => doc.setFont('helvetica','normal').setFontSize(s);
+  let y = 0;
+
+  // ═══════════════════════════════════════════════
+  // PAGE 1 — COVER / SUMMARY
+  // ═══════════════════════════════════════════════
+
+  // header band
+  fill(...NAVY); doc.rect(0, 0, W, 52, 'F');
+
+  // teal accent stripe
+  fill(...TEAL); doc.rect(0, 48, W, 4, 'F');
+
+  // logo mark (simplified SVG-like shapes)
+  const lx = margin, ly = 10;
+  fill(...NAVY); doc.roundedRect(lx, ly, 22, 22, 2, 2, 'F');
+  fill(...TEAL);
+  doc.rect(lx+3, ly+13, 4, 6, 'F');
+  doc.rect(lx+8, ly+10, 4, 9, 'F');
+  doc.rect(lx+13, ly+6.5, 4, 12.5, 'F');
+  fill(...AMBER); doc.circle(lx+15, ly+6.5, 1.5, 'F');
+  pen(...TEAL); doc.setLineWidth(0.7);
+  doc.line(lx+5, ly+12, lx+10, ly+9);
+  doc.line(lx+10, ly+9, lx+15, ly+6.5);
+
+  // product name
+  bold(18); ink(...WHITE);
+  doc.text('ClearDebt', lx+27, ly+10);
+  regular(7.5); ink(...TEAL);
+  doc.text('LOAN REPAYMENT REPORT', lx+27, ly+16);
+
+  // report meta (top right)
+  const now = new Date();
+  regular(7.5); ink(...SLATE);
+  doc.text(`Generated: ${now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}`, W-margin, ly+8, {align:'right'});
+  doc.text(`Prepared for: `, W-margin, ly+14, {align:'right'});
+  bold(8.5); ink(...WHITE);
+  doc.text(name, W-margin, ly+20, {align:'right'});
+
+  // ── key inputs box ──
+  y = 60;
+  const P         = parseFloat(document.getElementById('loanAmount').value);
+  const annualRate= parseFloat(document.getElementById('rateTyped').value);
+  const termVal   = parseInt(document.getElementById('loanTerm').value);
+  const termUnit  = document.getElementById('termUnit').value;
+  const freqKey   = document.getElementById('frequency').value;
+  const loanType  = document.getElementById('loanType').value;
+
+  const freqPerYear = FREQ[freqKey].perYear;
+  const totalMonths = termUnit === 'years' ? termVal * 12 : termVal;
+  const totalPeriods = Math.round((totalMonths / 12) * freqPerYear);
+  const sched = _lastSched;
+  const totalInterest = sched[sched.length-1].totalInterest;
+  const totalCost = P + totalInterest;
+  const actualPeriods = sched.length;
+  const years = actualPeriods / freqPerYear;
+  const yrs = Math.floor(years);
+  const mos = Math.round((years - yrs) * 12);
+  const termLabel = [yrs>0?`${yrs} yr${yrs>1?'s':''}`:'' , mos>0?`${mos} mo${mos>1?'s':''}`:'' ].filter(Boolean).join(', ') || '< 1 mo';
+  const pmt = sched[0].payment - sched[0].extra;
+  const freqLabel = FREQ[freqKey].label.charAt(0).toUpperCase() + FREQ[freqKey].label.slice(1);
+  const totalWeeks = Math.round(actualPeriods / freqPerYear * 52);
+
+  // section heading
+  bold(10); ink(...NAVY);
+  doc.text('LOAN SUMMARY', margin, y); y += 5;
+  pen(...TEAL); doc.setLineWidth(0.4);
+  doc.line(margin, y, margin+col, y); y += 6;
+
+  // 4 KPI boxes
+  const kpiW = (col - 6) / 4;
+  const kpiH = 22;
+  const kpis = [
+    { label: freqLabel+' Payment', value: fmt(pmt,2), color: TEAL },
+    { label: 'Total Interest',     value: fmt(totalInterest), color: AMBER },
+    { label: 'Total Cost',         value: fmt(totalCost),     color: RED   },
+    { label: 'Payoff Timeline',    value: termLabel,          color: GREEN },
+  ];
+
+  kpis.forEach((k, i) => {
+    const bx = margin + i*(kpiW+2);
+    fill(...LIGHT); doc.roundedRect(bx, y, kpiW, kpiH, 2, 2, 'F');
+    fill(...k.color); doc.rect(bx, y, kpiW, 2, 'F');
+    regular(6.5); ink(...SLATE);
+    doc.text(k.label.toUpperCase(), bx + kpiW/2, y+8, {align:'center'});
+    bold(9); ink(...k.color);
+    doc.text(k.value, bx + kpiW/2, y+16, {align:'center'});
+  });
+  y += kpiH + 8;
+
+  // weekly detail (if applicable)
+  if (freqKey === 'weekly' || freqKey === 'biweekly') {
+    fill(232,252,248); pen(...TEAL); doc.setLineWidth(0.3);
+    doc.roundedRect(margin, y, col, 10, 2, 2, 'FD');
+    regular(8); ink(...TEAL);
+    const weekTxt = freqKey === 'weekly'
+      ? `Weekly payoff: ${fmtNum(actualPeriods)} weeks  ·  ${termLabel}  ·  ${fmtNum(actualPeriods)} total payments`
+      : `Bi-weekly payoff: ${fmtNum(actualPeriods)} payments  (~${fmtNum(totalWeeks)} weeks)  ·  ${termLabel}`;
+    doc.text(weekTxt, W/2, y+6.5, {align:'center'});
+    y += 16;
+  }
+
+  // Loan parameters table
+  bold(10); ink(...NAVY);
+  doc.text('LOAN PARAMETERS', margin, y); y += 5;
+  pen(...AMBER); doc.setLineWidth(0.4);
+  doc.line(margin, y, margin+col, y); y += 4;
+
+  const loanTypeLabel = { standard:'Standard Fixed', interestonly:'Interest-Only Period', balloon:'Balloon Payment' }[loanType] || loanType;
+  const paramsData = [
+    ['Principal Amount', fmt(P,2)],
+    ['Annual Interest Rate (APR)', annualRate.toFixed(2)+'%'],
+    ['Loan Term', `${termVal} ${termUnit}`],
+    ['Payment Frequency', `${freqLabel} (${freqPerYear}×/year)`],
+    ['Amortization Method', loanTypeLabel],
+    ['Scheduled Payments', fmtNum(totalPeriods)],
+    ['Actual Payments to Payoff', fmtNum(actualPeriods)],
+  ];
+
+  const extraEnabled = document.getElementById('extraToggle').checked;
+  if (extraEnabled) {
+    const extraAmt = parseFloat(document.getElementById('extraAmount').value)||0;
+    const extraType = document.getElementById('extraType').value;
+    paramsData.push(['Extra Payment', `${fmt(extraAmt,2)} / ${extraType}`]);
+  }
+
+  doc.autoTable({
+    startY: y,
+    margin: { left: margin, right: margin },
+    theme: 'plain',
+    styles: { fontSize: 8.5, cellPadding: { top:3, bottom:3, left:4, right:4 }, font:'helvetica' },
+    columnStyles: { 0: { textColor: SLATE, fontStyle:'normal' }, 1: { textColor: NAVY, fontStyle:'bold', halign:'right' } },
+    alternateRowStyles: { fillColor: LIGHT },
+    body: paramsData,
+  });
+  y = doc.lastAutoTable.finalY + 8;
+
+  // Principal vs Interest bar
+  bold(10); ink(...NAVY);
+  doc.text('PRINCIPAL vs INTEREST BREAKDOWN', margin, y); y += 5;
+  pen(...NAVY); doc.setLineWidth(0.4);
+  doc.line(margin, y, margin+col, y); y += 5;
+
+  const principalPct = P / totalCost;
+  const barH = 8;
+  const barR = 2;
+  fill(...LIGHT); doc.roundedRect(margin, y, col, barH, barR, barR, 'F');
+  const pW = col * principalPct;
+  fill(...TEAL); doc.roundedRect(margin, y, pW, barH, barR, barR, 'F');
+  const iW = col * (1 - principalPct);
+  fill(...AMBER); doc.roundedRect(margin + pW, y, iW, barH, 0, 0, 'F');
+  // fix right corners for interest
+  fill(...AMBER); doc.roundedRect(margin + pW + iW - barR, y, barR, barH, 0, 0, 'F');
+
+  y += barH + 4;
+  regular(7.5);
+  ink(...TEAL); doc.text(`● Principal  ${fmt(P)}  (${(principalPct*100).toFixed(1)}%)`, margin, y);
+  ink(...AMBER); doc.text(`● Interest  ${fmt(totalInterest)}  (${((1-principalPct)*100).toFixed(1)}%)`, margin+55, y);
+  ink(...NAVY);  doc.text(`Total Cost  ${fmt(totalCost)}`, margin+115, y);
+  y += 10;
+
+  // Amortization table — first 30 rows on page 1
+  bold(10); ink(...NAVY);
+  doc.text('AMORTIZATION SCHEDULE', margin, y); y += 5;
+  pen(...NAVY); doc.setLineWidth(0.4);
+  doc.line(margin, y, margin+col, y); y += 2;
+
+  const freqColLabel = freqLabel+' #';
+  const tableRows = sched.slice(0, 250).map(r => [
+    r.period + (r.isExtra ? ' ★' : ''),
+    fmt(r.payment, 2),
+    fmt(r.principal, 2),
+    fmt(r.interest, 2),
+    fmt(r.balance, 2),
+    fmt(r.totalInterest, 2),
+  ]);
+
+  if (sched.length > 250) {
+    tableRows.push([`… ${sched.length-250} more rows`, '', '', '', '', '']);
+  }
+
+  doc.autoTable({
+    startY: y,
+    margin: { left: margin, right: margin },
+    theme: 'striped',
+    headStyles: { fillColor: NAVY, textColor: WHITE, fontSize: 7.5, fontStyle:'bold', halign:'right' },
+    styles: { fontSize: 7.5, cellPadding: { top:2.5, bottom:2.5, left:3, right:3 }, font:'helvetica', halign:'right' },
+    columnStyles: {
+      0: { halign:'left', textColor: NAVY, fontStyle:'bold' },
+      2: { textColor: [0,140,120] },
+    },
+    alternateRowStyles: { fillColor: [247,250,252] },
+    head: [[freqColLabel, 'Payment', 'Principal', 'Interest', 'Balance', 'Cum. Interest']],
+    body: tableRows,
+    didParseCell: (data) => {
+      if (data.section === 'body' && data.row.raw[0].toString().includes('★')) {
+        data.cell.styles.textColor = AMBER;
+      }
+    },
+  });
+
+  y = doc.lastAutoTable.finalY + 10;
+
+  // ═══════════════════════════════════════════════
+  // PAGE 2 — EXTRA PAYMENTS COMPARISON (if applicable)
+  // ═══════════════════════════════════════════════
+  const accelEnabled = document.getElementById('extraToggle').checked;
+  if (accelEnabled && window._lastSchedAccel) {
+    doc.addPage();
+
+    // header band
+    fill(...NAVY); doc.rect(0, 0, W, 28, 'F');
+    fill(...TEAL); doc.rect(0, 24, W, 3, 'F');
+    bold(12); ink(...WHITE);
+    doc.text('ClearDebt — Extra Payment Acceleration Analysis', margin, 17);
+    regular(7.5); ink(...TEAL);
+    doc.text(`Prepared for: ${name}  ·  ${now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}`, margin, 22.5);
+
+    y = 36;
+    const accel = window._lastSchedAccel;
+    const accelInterest = accel[accel.length-1].totalInterest;
+    const accelPeriods = accel.length;
+    const accelYears = accelPeriods / freqPerYear;
+    const accelYrs = Math.floor(accelYears);
+    const accelMos = Math.round((accelYears-accelYrs)*12);
+    const accelLabel = [accelYrs>0?`${accelYrs} yr${accelYrs>1?'s':''}`:'' , accelMos>0?`${accelMos} mo${accelMos>1?'s':''}`:'' ].filter(Boolean).join(', ') || '< 1 mo';
+    const savedInterest = totalInterest - accelInterest;
+    const savedPeriods = actualPeriods - accelPeriods;
+
+    bold(10); ink(...NAVY);
+    doc.text('COMPARISON: STANDARD vs ACCELERATED', margin, y); y += 5;
+    pen(...TEAL); doc.setLineWidth(0.4);
+    doc.line(margin, y, margin+col, y); y += 4;
+
+    doc.autoTable({
+      startY: y,
+      margin: { left: margin, right: margin },
+      theme: 'plain',
+      styles: { fontSize: 8.5, cellPadding: {top:3,bottom:3,left:4,right:4}, font:'helvetica' },
+      headStyles: { fillColor: LIGHT, textColor: SLATE, fontSize:7.5, fontStyle:'bold' },
+      columnStyles: {
+        0: { textColor: SLATE },
+        1: { textColor: NAVY, fontStyle:'bold', halign:'right' },
+        2: { textColor: [180,100,0], fontStyle:'bold', halign:'right' },
+      },
+      alternateRowStyles: { fillColor: [247,250,252] },
+      head: [['Metric', 'Standard Schedule', 'With Extra Payments']],
+      body: [
+        ['Payoff Time',      termLabel,              accelLabel],
+        ['Total Payments',   fmtNum(actualPeriods),  fmtNum(accelPeriods)],
+        ['Total Interest',   fmt(totalInterest),     fmt(accelInterest)],
+        ['Total Cost',       fmt(totalCost),         fmt(P+accelInterest)],
+        ['Payments Saved',   '—',                    fmtNum(savedPeriods)],
+        ['Interest Saved',   '—',                    fmt(savedInterest)],
+      ],
+    });
+    y = doc.lastAutoTable.finalY + 10;
+
+    // savings highlight box
+    fill(232,252,248); pen(...GREEN); doc.setLineWidth(0.5);
+    doc.roundedRect(margin, y, col, 18, 3, 3, 'FD');
+    bold(9); ink(...GREEN);
+    doc.text('🎉  TOTAL SAVINGS WITH EXTRA PAYMENTS', margin+6, y+7);
+    bold(13); ink(...GREEN);
+    doc.text(fmt(savedInterest), W-margin-6, y+7, {align:'right'});
+    regular(7.5); ink(...SLATE);
+    doc.text(`${accelLabel} payoff  ·  ${fmtNum(savedPeriods)} fewer payments  ·  pay off ${savedPeriods > 0 ? termLabel+' → '+accelLabel : 'same timeline'}`, margin+6, y+13);
+    y += 26;
+  }
+
+  // ── footer on every page ──
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    fill(...NAVY); doc.rect(0, H-14, W, 14, 'F');
+    regular(6.5); ink(...SLATE);
+    doc.text('ClearDebt · Loan Repayment Calculator · cleardebt.github.io', margin, H-6);
+    doc.text(`Page ${i} of ${pageCount}`, W-margin, H-6, {align:'right'});
+    ink(...TEAL);
+    doc.text('⚠ All figures are estimates. Consult a financial advisor for official guidance.', W/2, H-6, {align:'center'});
+  }
+
+  return doc;
+}
+
+// ============================================================
+// EMAIL (EmailJS)  — configure YOUR keys below
+// ============================================================
+
+// ▼▼▼  CONFIGURE THESE THREE VALUES TO ACTIVATE EMAIL  ▼▼▼
+const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // e.g. 'template_xyz789'
+const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'AbCdEfGhIjKlMnOp'
+// ▲▲▲  Sign up free at emailjs.com — 200 emails/month on free tier  ▲▲▲
+
+async function sendReportEmail() {
+  const name  = document.getElementById('exportName').value.trim();
+  const email = document.getElementById('exportEmail').value.trim();
+  const btn    = document.getElementById('btnSendEmail');
+  const status = document.getElementById('emailStatus');
+
+  if (!name || !email) return;
+
+  // Check keys configured
+  if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID') {
+    status.innerHTML = `<div class="modal-note warn">EmailJS is not yet configured. Please set your Service ID, Template ID, and Public Key in the script, or use <strong>Download PDF</strong> instead.</div>`;
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sending…';
+  status.innerHTML = '';
+
+  try {
+    // Build summary for email body
+    const sched = _lastSched;
+    if (!sched) throw new Error('No schedule data — please calculate first.');
+    const P = parseFloat(document.getElementById('loanAmount').value);
+    const annualRate = parseFloat(document.getElementById('rateTyped').value);
+    const freqKey = document.getElementById('frequency').value;
+    const freqPerYear = FREQ[freqKey].perYear;
+    const totalInterest = sched[sched.length-1].totalInterest;
+    const totalCost = P + totalInterest;
+    const pmt = sched[0].payment - sched[0].extra;
+    const years = sched.length / freqPerYear;
+    const yrs = Math.floor(years);
+    const mos = Math.round((years-yrs)*12);
+    const termLabel = [yrs>0?`${yrs} yr${yrs>1?'s':''}`:'' , mos>0?`${mos} mo${mos>1?'s':''}`:'' ].filter(Boolean).join(', ');
+    const freqLabel = FREQ[freqKey].label;
+
+    // Generate PDF as base64
+    const pdf = buildPDF(name);
+    const pdfBase64 = pdf.output('datauristring');
+
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_name:      name,
+      to_email:     email,
+      principal:    fmt(P, 2),
+      rate:         annualRate.toFixed(2) + '%',
+      payment:      fmt(pmt, 2) + ' / ' + freqLabel,
+      total_interest: fmt(totalInterest),
+      total_cost:   fmt(totalCost),
+      payoff_time:  termLabel,
+      report_date:  new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}),
+      pdf_data:     pdfBase64,
+    });
+
+    btn.innerHTML = '✅ Sent!';
+    status.innerHTML = `<div class="modal-note success">Report emailed to <strong>${email}</strong>. Check your inbox (and spam folder just in case).</div>`;
+    setTimeout(() => { btn.innerHTML = '✉️ Send Report to My Email'; btn.disabled = false; }, 4000);
+  } catch(err) {
+    btn.innerHTML = '✉️ Send Report to My Email';
+    btn.disabled = false;
+    status.innerHTML = `<div class="modal-note error">Send failed: ${err.text || err.message || 'Unknown error'}. Try downloading the PDF instead.</div>`;
+  }
+}
+
+// ============================================================
+// STORE accel schedule for PDF comparison page
+// ============================================================
+window._lastSchedAccel = null;
 </script>
 </body>
 </html>
