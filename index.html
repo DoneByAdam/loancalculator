@@ -1818,15 +1818,6 @@ function calculate() {
   renderResults(P, annualRate, totalPeriods, freqKey, freqPerYear, schedBase, schedAccel, extraEnabled, totalMonths, customPmtOn, customAmt);
 }
 
-// Set default date to today
-document.getElementById('startDate').valueAsDate = new Date();
-
-// Auto-calculate on load with defaults
-calculate();
-
-// ============================================================
-// MODAL / PDF / EMAIL JS below ↓
-
 // ============================================================
 // RENDER
 // ============================================================
@@ -2218,8 +2209,6 @@ function buildTable(sched, freqKey) {
 // ============================================================
 // EXPORT CSV
 // ============================================================
-let _lastSched = null;
-
 function exportCSV() {
   if (!_lastSched) return;
   const header = 'Period,Payment,Principal,Interest,Balance,Cumulative Interest\n';
@@ -2711,7 +2700,12 @@ async function sendReportEmail() {
 // ============================================================
 // STORE accel schedule for PDF comparison page
 // ============================================================
+let _lastSched = null;
 window._lastSchedAccel = null;
+
+// Init
+document.getElementById('startDate').valueAsDate = new Date();
+calculate();
 </script>
 </body>
 </html>
