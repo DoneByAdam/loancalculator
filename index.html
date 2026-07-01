@@ -2,8 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ClearDebt — Loan Repayment Calculator</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ClearDebt" />
+  <meta name="theme-color" content="#0A1628" />
+  <meta name="description" content="Calculate loan payoff timelines, amortization schedules, and the impact of extra payments." />
+
+  <!-- Apple touch icon (inline SVG as data URI) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%230A1628'/%3E%3Crect x='32' y='110' width='26' height='38' rx='5' fill='rgba(0,212,184,0.4)'/%3E%3Crect x='77' y='88' width='26' height='60' rx='5' fill='rgba(0,212,184,0.65)'/%3E%3Crect x='122' y='58' width='26' height='90' rx='5' fill='rgba(0,212,184,0.9)'/%3E%3Cpolyline points='45,105 90,78 135,48' fill='none' stroke='%2300D4B8' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='135' cy='48' r='9' fill='%23F59E0B'/%3E%3Cline x1='28' y1='148' x2='152' y2='148' stroke='%23F59E0B' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
+
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230A1628'/%3E%3Cpath d='M8 22 L16 10 L24 22' stroke='%2300D4B8' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='10' r='2' fill='%2300D4B8'/%3E%3Cline x1='10' y1='22' x2='22' y2='22' stroke='%23F59E0B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1214,12 +1227,169 @@
       display: inline-block;
     }
 
+    /* === RESPONSIVE — TABLET === */
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .input-panel { position: static; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* === RESPONSIVE — MOBILE === */
+    @media (max-width: 600px) {
+      .page-wrapper {
+        padding: 0 16px;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+      }
+      header { padding: 14px 0 12px; margin-bottom: 0; }
+      .header-badge { display: none; }
+      .logo-name { font-size: 1.15rem; }
+      .logo-tagline { display: none; }
+      .logo-icon { width: 36px; height: 36px; }
+      .hero { display: none; }
+      .main-grid { gap: 0; }
+      .input-panel {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        margin: 0 -16px;
+      }
+      .panel-header {
+        padding: 16px 20px;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        justify-content: space-between;
+      }
+      .panel-header::after {
+        content: '▾';
+        font-size: 1rem;
+        color: var(--teal);
+        transition: transform 0.25s;
+      }
+      .panel-header.collapsed::after { transform: rotate(-90deg); }
+      .input-body { padding: 16px 20px 20px; }
+      .input-body.hidden { display: none; }
+      input[type="number"], select, input[type="date"] {
+        font-size: 1rem !important;
+        padding: 13px 14px;
+        min-height: 48px;
+      }
+      .has-prefix input[type="number"] { padding-left: 30px !important; }
+      input[type="range"] { height: 6px; }
+      input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; }
+      .toggle-switch { width: 52px; height: 28px; }
+      .toggle-track::after { width: 22px; height: 22px; }
+      .toggle-switch input:checked + .toggle-track::after { transform: translateX(24px); }
+      .btn-calculate { padding: 16px; font-size: 1rem; min-height: 52px; }
+      .btn-reset { min-height: 44px; }
+      .results-panel { gap: 14px; padding-top: 14px; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .kpi-value { font-size: 1.15rem; }
+      .kpi-card { padding: 14px; }
+      canvas { max-height: 200px; }
+      .comparison-grid { grid-template-columns: 1fr; gap: 16px; }
+      .comparison-vs { display: none; }
+      .table-wrap { -webkit-overflow-scrolling: touch; }
+      table { font-size: 0.78rem; }
+      td, th { padding: 8px 10px; }
+      .export-bar { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
+      .export-bar-btns { width: 100%; }
+      .btn-export { flex: 1; justify-content: center; padding: 12px; font-size: 0.85rem; }
+      .modal-overlay { align-items: flex-end; padding: 0; }
+      .modal {
+        border-radius: 20px 20px 0 0;
+        max-width: 100%;
+        width: 100%;
+        padding: 8px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+        max-height: 92vh;
+        overflow-y: auto;
+      }
+      .modal::before {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 4px;
+        background: rgba(148,163,184,0.3);
+        border-radius: 2px;
+        margin: 0 auto 20px;
+      }
+      .slider-label-row { flex-wrap: wrap; gap: 8px; }
+      footer { flex-direction: column; gap: 6px; text-align: center; }
+    }
+
+    /* === MOBILE BOTTOM NAV === */
+    .mobile-nav { display: none; }
+
+    @media (max-width: 600px) {
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: rgba(10,22,40,0.97);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--border);
+        padding: 6px 8px env(safe-area-inset-bottom, 8px);
+        z-index: 500;
+        gap: 2px;
+      }
+      .mobile-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 8px 4px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.15s;
+        color: var(--slate);
+        font-family: 'DM Sans', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+      .mobile-nav-btn.active { background: rgba(0,212,184,0.12); color: var(--teal); }
+      .mobile-nav-btn .nav-icon { font-size: 1.25rem; line-height: 1; }
+      .mobile-nav-btn .nav-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.03em; }
+
+      /* Install banner */
+      .install-banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, rgba(0,212,184,0.12), rgba(0,212,184,0.05));
+        border: 1px solid rgba(0,212,184,0.25);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+      .install-banner-text { flex: 1; font-size: 0.82rem; color: var(--white); line-height: 1.4; }
+      .install-banner-text strong { color: var(--teal); display: block; font-size: 0.87rem; margin-bottom: 2px; }
+      .btn-install {
+        padding: 10px 16px;
+        background: var(--teal);
+        color: var(--navy);
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        touch-action: manipulation;
+      }
+    }
+    @media (min-width: 601px) { .install-banner { display: none !important; } }
+
     /* === PRINT === */
     @media print {
       body { background: white; color: black; }
       body::before { display: none; }
       .input-panel { position: static; }
-      .btn-calculate, .btn-reset { display: none; }
+      .btn-calculate, .btn-reset, .mobile-nav { display: none; }
     }
   </style>
 </head>
@@ -1252,6 +1422,15 @@
     </a>
     <div class="header-badge">v2.0 · Amortization Engine</div>
   </header>
+
+  <!-- INSTALL BANNER (mobile only, shown when installable) -->
+  <div class="install-banner" id="installBanner" style="display:none;">
+    <div class="install-banner-text">
+      <strong>📲 Add to Home Screen</strong>
+      Install ClearDebt for quick access — works offline too
+    </div>
+    <button class="btn-install" id="btnInstall">Install</button>
+  </div>
 
   <!-- HERO -->
   <div class="hero">
@@ -2706,6 +2885,107 @@ window._lastSchedAccel = null;
 // Init
 document.getElementById('startDate').valueAsDate = new Date();
 calculate();
+</script>
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-btn active" id="navCalc" onclick="mobileNavTo('calc')">
+    <span class="nav-icon">⚙️</span>
+    <span class="nav-label">Calculate</span>
+  </button>
+  <button class="mobile-nav-btn" id="navResults" onclick="mobileNavTo('results')">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">Results</span>
+  </button>
+  <button class="mobile-nav-btn" id="navChart" onclick="mobileNavTo('chart')">
+    <span class="nav-icon">📈</span>
+    <span class="nav-label">Chart</span>
+  </button>
+  <button class="mobile-nav-btn" id="navExport" onclick="openModal('pdf')">
+    <span class="nav-icon">📄</span>
+    <span class="nav-label">Export</span>
+  </button>
+</nav>
+
+<script>
+// ── Service Worker registration ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ── PWA Install prompt ──
+let _deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _deferredInstall = e;
+  const banner = document.getElementById('installBanner');
+  if (banner) banner.style.display = 'flex';
+});
+
+document.getElementById('btnInstall')?.addEventListener('click', async () => {
+  if (!_deferredInstall) return;
+  _deferredInstall.prompt();
+  const { outcome } = await _deferredInstall.userChoice;
+  if (outcome === 'accepted') {
+    document.getElementById('installBanner').style.display = 'none';
+  }
+  _deferredInstall = null;
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBanner').style.display = 'none';
+});
+
+// ── Mobile accordion — tap panel header to collapse/expand ──
+const panelHeader = document.querySelector('.panel-header');
+const inputBody   = document.querySelector('.input-body');
+let panelOpen = true;
+
+panelHeader?.addEventListener('click', () => {
+  if (window.innerWidth > 600) return;
+  panelOpen = !panelOpen;
+  inputBody.classList.toggle('hidden', !panelOpen);
+  panelHeader.classList.toggle('collapsed', !panelOpen);
+});
+
+// ── Mobile nav scroll ──
+function mobileNavTo(section) {
+  if (window.innerWidth > 600) return;
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+
+  if (section === 'calc') {
+    document.getElementById('navCalc').classList.add('active');
+    // Expand input panel
+    panelOpen = true;
+    inputBody?.classList.remove('hidden');
+    panelHeader?.classList.remove('collapsed');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else if (section === 'results') {
+    document.getElementById('navResults').classList.add('active');
+    const kpi = document.getElementById('kpiGrid');
+    kpi?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (section === 'chart') {
+    document.getElementById('navChart').classList.add('active');
+    const chart = document.querySelector('#amortChart')?.closest('.chart-card');
+    chart?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// After calculate, collapse input panel on mobile and switch to results tab
+const _origCalculate = calculate;
+function calculate() {
+  _origCalculate();
+  if (window.innerWidth <= 600 && _lastSched) {
+    setTimeout(() => {
+      panelOpen = false;
+      inputBody?.classList.add('hidden');
+      panelHeader?.classList.add('collapsed');
+      document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('navResults')?.classList.add('active');
+    }, 100);
+  }
+}
 </script>
 </body>
 </html>
