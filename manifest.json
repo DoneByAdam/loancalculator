@@ -1,0 +1,40 @@
+{
+  "name": "ClearDebt — Loan Repayment Calculator",
+  "short_name": "ClearDebt",
+  "description": "Calculate loan payoff timelines, amortization schedules, and the impact of extra payments.",
+  "start_url": "/loancalculator/",
+  "scope": "/loancalculator/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0A1628",
+  "theme_color": "#0A1628",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%230A1628'/%3E%3Crect x='6' y='6' width='180' height='180' rx='32' fill='none' stroke='rgba(0,212,184,0.25)' stroke-width='4'/%3E%3Crect x='34' y='118' width='28' height='40' rx='5' fill='rgba(0,212,184,0.35)'/%3E%3Crect x='82' y='94' width='28' height='64' rx='5' fill='rgba(0,212,184,0.6)'/%3E%3Crect x='130' y='62' width='28' height='96' rx='5' fill='rgba(0,212,184,0.85)'/%3E%3Cpolyline points='48,112 96,84 144,52' fill='none' stroke='%2300D4B8' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='144' cy='52' r='10' fill='%23F59E0B'/%3E%3Cline x1='30' y1='158' x2='162' y2='158' stroke='%23F59E0B' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%230A1628'/%3E%3Crect x='14' y='14' width='484' height='484' rx='82' fill='none' stroke='rgba(0,212,184,0.25)' stroke-width='10'/%3E%3Crect x='80' y='310' width='76' height='112' rx='12' fill='rgba(0,212,184,0.35)'/%3E%3Crect x='218' y='248' width='76' height='174' rx='12' fill='rgba(0,212,184,0.6)'/%3E%3Crect x='356' y='154' width='76' height='268' rx='12' fill='rgba(0,212,184,0.85)'/%3E%3Cpolyline points='118,298 256,228 394,144' fill='none' stroke='%2300D4B8' stroke-width='20' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='394' cy='144' r='26' fill='%23F59E0B'/%3E%3Cline x1='70' y1='422' x2='442' y2='422' stroke='%23F59E0B' stroke-width='16' stroke-linecap='round'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "label": "ClearDebt loan calculator",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Calculation",
+      "short_name": "Calculate",
+      "description": "Start a new loan calculation",
+      "url": "/loancalculator/"
+    }
+  ]
+}
